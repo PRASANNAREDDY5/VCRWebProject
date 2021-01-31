@@ -33,7 +33,6 @@ namespace TestWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var apiRes = _user.UserRegistration(_user);
                 if (apiRes.IsSuccessful)
                 {
@@ -58,24 +57,20 @@ namespace TestWebApplication.Controllers
             UserModel uObj = new UserModel();
             if (ModelState.IsValid)
             {
+                var apiToken = uObj.GenerateToken(uLogin);
                 var apiRes = uObj.LoginDetails(uLogin);
                 if (apiRes.IsSuccessful)
-                {
-                    var resJ = apiRes.ContentLength;
-                    if (resJ > 2)
+                {                   
+                    if (uLogin.UserName == uObj.uname && uLogin.Password == uObj.pwd)
                     {
                         Session["UserName"] = uLogin.UserName.ToString();
-                        //if (resJ.Success)
-                        //{
-
-                        //}
                         return RedirectToAction("Index");
                     }
-                    else {
+                    else
+                    {
                         ViewBag.error = "Invalid User";
                         return View();
                     }
-                   
                 }
                 else
                 {
@@ -84,7 +79,6 @@ namespace TestWebApplication.Controllers
             }
             return View();
         }
-
         //Logout
         public ActionResult Logout()
         {
